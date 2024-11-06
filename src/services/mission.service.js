@@ -1,5 +1,21 @@
+import {
+  addMission,checkMissionExists, checkUserChallengeExists, addChallenge
+} from "../repositories/mission.repository.js";
 import { pool } from "../db.config.js";
-import { checkMissionExists, checkUserChallengeExists, addChallenge } from "../repositories/mission.repository.js";
+
+export const createMission = async (data) => {
+  const joinStoreId = await addMission({
+    store_id : data.store_id,
+    name : data.name,
+    description : data.description,
+    award : data.award,
+    award_point : data.award_point,
+  });
+
+  if (joinStoreId === null) {
+    throw new Error("존재하지 않는 식당입니다.");
+  }
+};
 
 export const challengeMission = async (dto) => {
   const conn = await pool.getConnection();
@@ -31,3 +47,4 @@ export const challengeMission = async (dto) => {
     conn.release(); // 연결 해제
   }
 };
+

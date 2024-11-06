@@ -1,3 +1,12 @@
+export const bodyToMission = (body) => {
+  return {
+    store_id : body.store_id,
+    name : body.name,
+    description : body.description,
+    award : body.award,
+    award_point : body.award_point,
+  };
+};
 export const challengeMissionDTO = (storeId, missionId, body) => {
     // 요청 본문에서 필요한 데이터 추출
     const user_id = body.user_id;
@@ -20,4 +29,3 @@ export const challengeMissionDTO = (storeId, missionId, body) => {
       dday
     };
   };
-  
