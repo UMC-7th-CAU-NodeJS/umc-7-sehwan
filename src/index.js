@@ -1,7 +1,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import cors from "cors";
 import {handleUserSignUp} from "./controllers/user.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
 import { handleCreateMission, handleChallengeMission } from "./controllers/mission.controller.js";
