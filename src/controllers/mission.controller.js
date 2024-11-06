@@ -8,6 +8,7 @@ export const handleCreateMission = async (req, res, next) => {
 
   const user = await createMission(bodyToMission(req.body));
   res.status(StatusCodes.OK).json({ result: user });
+}
 
 export const handleChallengeMission = async (req, res) => {
   try {
