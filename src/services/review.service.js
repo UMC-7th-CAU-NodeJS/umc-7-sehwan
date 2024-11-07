@@ -16,7 +16,9 @@ export const addReview = async (data) => {
     throw new Error("존재하지 않는 식당입니다.");
   }
 
-  for (const image of data.images){
-    await setImage(joinReviewId, image);    
+  if (Array.isArray(data.images) && data.images.length > 0) {
+    for (const image of data.images) {
+      await setImage(joinReviewId, image);
+    }
   }
 };

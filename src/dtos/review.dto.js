@@ -1,7 +1,7 @@
 export const bodyToReview = (body) => {
   return {
-    user_id: body.user_id,
-    store_id: body.store_id,
+    user_id: body.userId,
+    store_id: body.storeId,
     content: body.content,
     rating: body.rating,
     images: body.images,

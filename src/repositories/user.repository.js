@@ -1,7 +1,6 @@
 import { prisma } from "../db.config.js";
 
 // User 데이터 삽입
-// User 데이터 삽입
 export const addUser = async (data) => {
     // 이메일이 이미 존재하는지 확인
     const user = await prisma.users.findFirst({
@@ -15,16 +14,7 @@ export const addUser = async (data) => {
   
     // 사용자가 존재하지 않으면 새로운 사용자 생성
     const created = await prisma.users.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        gender: data.gender,
-        birth: data.birth,
-        address: data.address,
-        point: data.point ?? null,
-        phoneNum: data.phoneNum,
-        status: data.status ?? true, // 기본값 설정 가능
-      }
+      data: data
     });
   
     // 생성된 사용자의 ID 반환
