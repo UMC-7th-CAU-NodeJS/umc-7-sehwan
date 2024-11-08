@@ -34,15 +34,14 @@ export const userSignUp = async (data) => {
 };
 
 export const userGetReview = async (userId) => {
-    const parsedUserId = parseInt(userId,10);
-    if (isNaN(parsedUserId)){
+    if (isNaN(userId)){
         throw new Error("유효하지 않은 userId입니다.")
     }
-    const joinUserId = await checkUserExists(parsedUserId);
+    const joinUserId = await checkUserExists(userId);
     if (joinUserId === null){
         throw new Error("존재하지 않는 사용자입니다.");
     }
-    const userReviews = await getUserReview(parsedUserId);
+    const userReviews = await getUserReview(userId);
     console.log(userReviews);
     return userReviews;
 }

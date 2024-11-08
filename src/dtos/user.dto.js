@@ -31,3 +31,7 @@ export const responseFromUser = ({ user, preferences }) => {
   };
 };
 
+export const userGetReviewDTO = (userId) => {
+    const parsedUserId = parseInt(userId, 10);
+    return parsedUserId;
+}
