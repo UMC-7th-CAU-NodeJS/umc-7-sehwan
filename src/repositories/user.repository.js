@@ -61,6 +61,15 @@ export const getUserReview = async (userId) => {
     const userReview = await prisma.reviews.findMany({
         where: {userId: userId},
         orderBy: { date : "desc" },
+        include: {
+            reviewImages: {
+              include: {
+                image: { // 이미지 테이블의 URL을 가져오기 위한 설정
+                  select: { url: true },
+                },
+              },
+            },
+          },
     });
 
     return userReview;
