@@ -30,14 +30,7 @@ export const responseFromUser = ({ user, preferences }) => {
       preferCategory: preferFoods,
     };
   };
-//     // 사용자가 선호하는 음식 리스트
-//     const userPreferences = preferences.map((pref) => ({
-//       food_id: pref.food_id,
-//       name: pref.name,  // 음식의 이름
-//     }));
 
-//     return {
-//       ...userData,
-//       preferences: userPreferences,  // 선호 항목 리스트 포함
-//     };
-//   };
+export const userMissionDTO = (userId) =>{
+    return parseInt(userId, 10);
+}
