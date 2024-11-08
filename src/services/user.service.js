@@ -4,6 +4,8 @@ import {
   getUser,
   getUserPreferencesByUserId,
   setPreference,
+  checkUserExists,
+  getUserReview,
 } from "../repositories/user.repository.js";
 
 export const userSignUp = async (data) => {
@@ -30,3 +32,16 @@ export const userSignUp = async (data) => {
 
   return responseFromUser({ user, preferences });
 };
+
+export const userGetReview = async (userId) => {
+    if (isNaN(userId)){
+        throw new Error("유효하지 않은 userId입니다.")
+    }
+    const joinUserId = await checkUserExists(userId);
+    if (joinUserId === null){
+        throw new Error("존재하지 않는 사용자입니다.");
+    }
+    const userReviews = await getUserReview(userId);
+    console.log(userReviews);
+    return userReviews;
+}
