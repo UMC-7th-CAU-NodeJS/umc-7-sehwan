@@ -57,6 +57,7 @@ export const getUserPreferencesByUserId = async (userId) => {
   return preferences;
 };
 
+
 export const checkUserExists = async (userId) => {
   try {
     const user = await prisma.users.findUnique({
@@ -80,6 +81,38 @@ export const getUserMissions = async (userId) => {
         },
       });
       return missions;
+    } catch (error) {
+      throw new Error(`오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`);
+    }
+  };
+
+export const getUserReview = async (userId) => {
+    const userReview = await prisma.reviews.findMany({
+        where: {userId: userId},
+        orderBy: { date : "desc" },
+        include: {
+            reviewImages: {
+              include: {
+                image: { // 이미지 테이블의 URL을 가져오기 위한 설정
+                  select: { url: true },
+                },
+              },
+            },
+          },
+    });
+
+    return userReview;
+}
+
+export const checkUserExists = async (userId) => {
+    
+    try {
+      const user = await prisma.users.findUnique({
+        where: { id: userId },
+      });
+  
+      return !!user; // 유저가 존재하면 true, 그렇지 않으면 false 반환
+
     } catch (error) {
       throw new Error(`오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`);
     }

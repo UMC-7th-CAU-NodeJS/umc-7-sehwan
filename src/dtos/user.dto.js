@@ -20,17 +20,21 @@ export const bodyToUser = (body) => {
 
 // DB에서 가져온 데이터를 클라이언트 응답 형식으로 변환 (GET 요청 응답 시 사용)
 export const responseFromUser = ({ user, preferences }) => {
-    const preferFoods = preferences.map(
-      (preference) => preference.food.name // preference.food.name으로 수정
-    );
-  
-    return {
-      email: user.email,
-      name: user.name,
-      preferCategory: preferFoods,
-    };
+  const preferFoods = preferences.map(
+    (preference) => preference.food.name // preference.food.name으로 수정
+  );
+
+  return {
+    email: user.email,
+    name: user.name,
+    preferCategory: preferFoods,
   };
 
 export const userMissionDTO = (userId) =>{
     return parseInt(userId, 10);
-}
+};
+
+export const userGetReviewDTO = (userId) => {
+    const parsedUserId = parseInt(userId, 10);
+    return parsedUserId;
+};

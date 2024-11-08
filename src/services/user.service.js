@@ -6,6 +6,7 @@ import {
   setPreference,
   checkUserExists,
   getUserMissions,
+  getUserReview,
 } from "../repositories/user.repository.js";
 
 export const userSignUp = async (data) => {
@@ -35,13 +36,32 @@ export const userSignUp = async (data) => {
 
 export const userMission = async (userId) => {
     if (isNaN(userId)){
-        throw new Error("유효하지 않은 userId입니다.")
+        throw new Error("유효하지 않은 userId입니다.");
     }
+
     const joinUserId = await checkUserExists(userId);
-    if (joinUserId === false){
+
+    if (!joinUserId) {
         throw new Error("존재하지 않는 사용자입니다.");
     }
+
     const userMissions = await getUserMissions(userId);
     console.log(userMissions);
     return userMissions;
-}
+};
+
+export const userGetReview = async (userId) => {
+    if (isNaN(userId)){
+        throw new Error("유효하지 않은 userId입니다.");
+    }
+
+    const joinUserId = await checkUserExists(userId);
+
+    if (!joinUserId) {
+        throw new Error("존재하지 않는 사용자입니다.");
+    }
+
+    const userReviews = await getUserReview(userId);
+    console.log(userReviews);
+    return userReviews;
+};
