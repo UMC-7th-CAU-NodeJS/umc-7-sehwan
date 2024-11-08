@@ -1,50 +1,46 @@
 import {
-  addMission,checkMissionExists, checkUserChallengeExists, addChallenge
-} from "../repositories/mission.repository.js";
-import { pool } from "../db.config.js";
-
-export const createMission = async (data) => {
-  const joinStoreId = await addMission({
-    store_id : data.store_id,
-    name : data.name,
-    description : data.description,
-    award : data.award,
-    award_point : data.award_point,
-  });
-
-  if (joinStoreId === null) {
-    throw new Error("존재하지 않는 식당입니다.");
-  }
-};
-
-export const challengeMission = async (dto) => {
-  const conn = await pool.getConnection();
+    addMission,
+    checkMissionExists,
+    checkUserChallengeExists,
+    addChallenge,
+    checkStoreExists,
+    getStoreMission,
+  } from "../repositories/mission.repository.js";
+  import { responseFromStoreMission } from "../dtos/mission.dto.js";
   
-  try {
-    await conn.beginTransaction(); // 트랜잭션 시작
-
-    // 1. Mission ID와 Store ID가 유효한지 확인
-    const missionExists = await checkMissionExists(conn, dto.storeId, dto.missionId);
+  // 새로운 미션 생성
+  export const createMission = async (data) => {
+    const joinStoreId = await addMission(data);
+    if (joinStoreId === null) {
+      throw new Error("존재하지 않는 식당입니다.");
+    }
+  };
+  
+  // 미션 도전
+  export const challengeMission = async (dto) => {
+    const missionExists = await checkMissionExists(dto.storeId, dto.missionId);
     if (!missionExists) {
       throw new Error("해당 미션 또는 가게가 유효하지 않습니다.");
     }
-
-    // 2. 사용자가 이미 도전 중인지 확인
-    const challengeExists = await checkUserChallengeExists(conn, dto.user_id, dto.missionId);
+  
+    const challengeExists = await checkUserChallengeExists(dto.user_id, dto.missionId);
     if (challengeExists) {
       throw new Error("이미 도전 중인 미션입니다.");
     }
-
-    // 3. AcceptedMission 테이블에 미션 도전 정보 삽입
-    const acceptedMissionId = await addChallenge(conn, dto.user_id, dto.missionId, dto.dday);
-
-    await conn.commit(); // 트랜잭션 커밋
-    return acceptedMissionId; // 삽입된 AcceptedMission의 ID 반환
-  } catch (err) {
-    await conn.rollback(); // 오류 발생 시 롤백
-    throw new Error(`미션 도전 중 오류가 발생했습니다: ${err.message}`);
-  } finally {
-    conn.release(); // 연결 해제
-  }
-};
-
+  
+    const acceptedMissionId = await addChallenge(dto.user_id, dto.missionId, dto.dday);
+    return acceptedMissionId;
+  };
+  
+  // 가게의 미션 목록 가져오기
+  export const storeGetMission = async (storeId) => {
+    const parsedStoreId = parseInt(storeId, 10);
+    const joinStoreId = await checkStoreExists(parsedStoreId);
+    if (!joinStoreId) {
+      throw new Error("존재하지 않는 가게입니다.");
+    }
+  
+    const storeMissions = await getStoreMission(parsedStoreId);
+    return responseFromStoreMission({ storeMissions });
+  };
+  
