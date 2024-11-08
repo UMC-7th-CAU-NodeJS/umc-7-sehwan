@@ -1,7 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import {handleUserSignUp} from "./controllers/user.controller.js";
+import {handleUserSignUp, handleUserMission,handleUserReviews} from "./controllers/user.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
 import { handleCreateMission, handleChallengeMission, handleStoreMission } from "./controllers/mission.controller.js";
 
@@ -24,6 +24,8 @@ app.post("/api/v1/addReview", handleAddReview);
 app.post("/api/v1/mission/addMission", handleCreateMission);
 app.post("/api/stores/:storeId/missions/:missionId/challenge", handleChallengeMission);
 app.get("/api/v1/:storeId/missions", handleStoreMission);
+app.get("/api/v1/:userId/missions", handleUserMission);
+app.get("/api/v1/:userId/myReviews", handleUserReviews);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
