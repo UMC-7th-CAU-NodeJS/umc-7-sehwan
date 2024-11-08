@@ -57,6 +57,35 @@ export const getUserPreferencesByUserId = async (userId) => {
   return preferences;
 };
 
+
+export const checkUserExists = async (userId) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
+
+    return !!user; // 유저가 존재하면 true, 그렇지 않으면 false 반환
+  } catch (error) {
+    throw new Error(
+      `오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`
+    );
+  }
+};
+
+export const getUserMissions = async (userId) => {
+    try {
+      const missions = await prisma.acceptedMission.findMany({
+        where: { userId: userId },
+        include: {
+          mission: true,  // 'mission'이 AcceptedMission과의 관계에 해당하는 필드명이어야 합니다.
+        },
+      });
+      return missions;
+    } catch (error) {
+      throw new Error(`오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`);
+    }
+  };
+
 export const getUserReview = async (userId) => {
     const userReview = await prisma.reviews.findMany({
         where: {userId: userId},
@@ -83,6 +112,7 @@ export const checkUserExists = async (userId) => {
       });
   
       return !!user; // 유저가 존재하면 true, 그렇지 않으면 false 반환
+
     } catch (error) {
       throw new Error(`오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`);
     }
