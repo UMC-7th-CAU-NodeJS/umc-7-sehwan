@@ -34,13 +34,15 @@ import {
   
   // 가게의 미션 목록 가져오기
   export const storeGetMission = async (storeId) => {
-    const parsedStoreId = parseInt(storeId, 10);
-    const joinStoreId = await checkStoreExists(parsedStoreId);
+    if (isNaN(storeId)){
+        throw new Error("유효하지 않은 storeId입니다.");
+    }
+    const joinStoreId = await checkStoreExists(storeId);
     if (!joinStoreId) {
       throw new Error("존재하지 않는 가게입니다.");
     }
   
-    const storeMissions = await getStoreMission(parsedStoreId);
+    const storeMissions = await getStoreMission(storeId);
     return responseFromStoreMission({ storeMissions });
   };
   

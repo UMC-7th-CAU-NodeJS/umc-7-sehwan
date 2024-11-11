@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { bodyToMission, challengeMissionDTO } from "../dtos/mission.dto.js";
+import { bodyToMission, challengeMissionDTO, storeMissionDTO } from "../dtos/mission.dto.js";
 import {
   createMission,
   challengeMission,
@@ -40,13 +40,13 @@ export const handleStoreMission = async (req, res, next) => {
     console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
     try {
     const { storeId } = req.params; // 경로 파라미터에서 storeId와 missionId 가져오기
-
+    const dto = storeMissionDTO(storeId);
     // 서비스 레이어 호출, DTO 데이터를 전달
-    const storeMissionId = await storeGetMission(storeId);
+    const storeMissionId = await storeGetMission(dto);
 
     // 성공 응답
     res.status(201).json({
-      message: "미션에 성공적으로 도전했습니다.",
+      message: "미션에 조회에 성공했습니다.",
       storeMissionId,
     });
   } catch (error) {

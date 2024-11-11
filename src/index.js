@@ -23,8 +23,8 @@ app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/addReview", handleAddReview);
 app.post("/api/v1/mission/addMission", handleCreateMission);
 app.post("/api/stores/:storeId/missions/:missionId/challenge", handleChallengeMission);
-app.get("/api/v1/:storeId/missions", handleStoreMission);
-app.get("/api/v1/:userId/missions", handleUserMission);
+app.get("/api/v1/store/:storeId/missions", handleStoreMission);
+app.get("/api/v1/user/:userId/missions", handleUserMission);
 app.get("/api/v1/:userId/myReviews", handleUserReviews);
 
 app.listen(port, () => {
