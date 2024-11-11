@@ -103,17 +103,3 @@ export const getUserReview = async (userId) => {
 
     return userReview;
 }
-
-export const checkUserExists = async (userId) => {
-    
-    try {
-      const user = await prisma.users.findUnique({
-        where: { id: userId },
-      });
-  
-      return !!user; // 유저가 존재하면 true, 그렇지 않으면 false 반환
-
-    } catch (error) {
-      throw new Error(`오류가 발생했어요. 요청을 확인해 주세요. (${error.message})`);
-    }
-  };

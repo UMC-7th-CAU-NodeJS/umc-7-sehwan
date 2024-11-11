@@ -29,6 +29,7 @@ export const responseFromUser = ({ user, preferences }) => {
     name: user.name,
     preferCategory: preferFoods,
   };
+}
 
 export const userMissionDTO = (userId) =>{
     return parseInt(userId, 10);
