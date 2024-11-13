@@ -13,7 +13,6 @@ export const handleUserSignUp = async (req, res, next) => {
 export const handleUserMission = async (req, res, next) => {
     console.log("UserMission Api called!");
 
-    try {
         const userId = req.params.userId;  // 경로 파라미터에서 userId와 missionId 가져오기
     
         // DTO 함수로 요청 데이터를 처리 (경로 파라미터와 요청 본문 전달)
@@ -25,10 +24,6 @@ export const handleUserMission = async (req, res, next) => {
     
         // 성공 응답
         res.status(StatusCodes.OK).success(userMissionId);
-      } catch (error) {
-        // 오류 응답
-        res.status(400).json({ error: error.message });
-      }
 }
 
 export const handleUserReviews = async (req, res, next) => {
