@@ -1,5 +1,5 @@
 import { responseFromUser } from "../dtos/user.dto.js";
-import { DuplicateUserEmailError } from "../errors.js";
+import { DuplicateUserEmailError, UserNotFoundError } from "../errors.js";
 import {
   addUser,
   getUser,
@@ -37,13 +37,13 @@ export const userSignUp = async (data) => {
 
 export const userMission = async (userId) => {
     if (isNaN(userId)){
-        throw new Error("유효하지 않은 userId입니다.");
+        throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", userId);
     }
 
     const joinUserId = await checkUserExists(userId);
 
     if (!joinUserId) {
-        throw new Error("존재하지 않는 사용자입니다.");
+      throw new UserNotFoundError("사용자를 찾을 수 없습니다.", userId);
     }
 
     const userMissions = await getUserMissions(userId);
@@ -53,13 +53,13 @@ export const userMission = async (userId) => {
 
 export const userGetReview = async (userId) => {
     if (isNaN(userId)){
-        throw new Error("유효하지 않은 userId입니다.");
+      throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", userId);
     }
 
     const joinUserId = await checkUserExists(userId);
 
     if (!joinUserId) {
-        throw new Error("존재하지 않는 사용자입니다.");
+      throw new UserNotFoundError("사용자를 찾을 수 없습니다.", userId);
     }
 
     const userReviews = await getUserReview(userId);

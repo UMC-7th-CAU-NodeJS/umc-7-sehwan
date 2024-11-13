@@ -24,10 +24,7 @@ export const handleUserMission = async (req, res, next) => {
         const userMissionId = await userMission(dto);
     
         // 성공 응답
-        res.status(201).json({
-          message: "미션조회에 성공했습니다.",
-          userMissionId,
-        });
+        res.status(StatusCodes.OK).success(userMissionId);
       } catch (error) {
         // 오류 응답
         res.status(400).json({ error: error.message });
@@ -40,5 +37,5 @@ export const handleUserReviews = async (req, res, next) => {
     const { userId } = req.params;
     const dto = userGetReviewDTO(userId);
     const userReview = await userGetReview(dto); //dtoo를 사용해서 service로 넘김
-    res.status(StatusCodes.OK).json({result: userReview});
+    res.status(StatusCodes.OK).success(userReview);
 }

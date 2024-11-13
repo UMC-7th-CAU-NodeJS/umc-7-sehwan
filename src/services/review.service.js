@@ -1,3 +1,4 @@
+import { StoreNotFoundError } from "../errors.js";
 import {
   setReview,
   setImage
@@ -13,7 +14,7 @@ export const addReview = async (data) => {
   });
 
   if (joinReviewId === null){
-    throw new Error("존재하지 않는 식당입니다.");
+    throw new StoreNotFoundError("존재하지 않는 식당입니다.");
   }
 
   if (Array.isArray(data.images) && data.images.length > 0) {
