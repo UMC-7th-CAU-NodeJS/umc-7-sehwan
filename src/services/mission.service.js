@@ -13,7 +13,7 @@ import { DuplicateMissionError, MissionNotFoundError, StoreNotFoundError } from 
   export const createMission = async (data) => {
     const joinStoreId = await addMission(data);
     if (joinStoreId === null) {
-      throw new StoreNotFoundError("존재하지 않는 식당입니다.");
+      throw new StoreNotFoundError("존재하지 않는 가게입니다.");
     }
   };
   
