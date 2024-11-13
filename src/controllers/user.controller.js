@@ -7,7 +7,7 @@ export const handleUserSignUp = async (req, res, next) => {
     console.log("body:", req.body);
 
     const user = await userSignUp(bodyToUser(req.body)); //dtoo를 사용해서 service로 넘김
-    res.status(StatusCodes.OK).json({result: user});
+    res.status(StatusCodes.OK).success(user);
 };
 
 export const handleUserMission = async (req, res, next) => {
