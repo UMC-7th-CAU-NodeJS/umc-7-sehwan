@@ -21,7 +21,8 @@ import { DuplicateMissionError, MissionNotFoundError, StoreNotFoundError } from 
   // 미션 도전
   export const challengeMission = async (dto) => {
     const missionExists = await checkMissionExists(dto.storeId, dto.missionId);
-    if (!missionExists) {
+    console.log(missionExists);
+    if (missionExists) {
       throw new MissionNotFoundError("해당 미션이 존재하지 않습니다.", dto);
     }
   

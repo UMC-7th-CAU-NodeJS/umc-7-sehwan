@@ -17,6 +17,8 @@ export const handleCreateMission = async (req, res, next) => {
 export const handleChallengeMission = async (req, res) => {
     const { storeId, missionId } = req.params; // 경로 파라미터에서 storeId와 missionId 가져오기
 
+    console.log("미션 도전 api가 요청되었습니다.");
+    console.log(req.body);
     // DTO 함수로 요청 데이터를 처리 (경로 파라미터와 요청 본문 전달)
     const dto = challengeMissionDTO(storeId, missionId, req.body);
 

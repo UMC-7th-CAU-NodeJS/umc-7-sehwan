@@ -22,9 +22,12 @@ export const addMission = async (data) => {
 
 // 특정 Store ID와 Mission ID가 유효한지 확인하는 함수
 export const checkMissionExists = async (storeId, missionId) => {
+  console.log(storeId);
+  console.log(missionId);
   const mission = await prisma.missions.findFirst({
     where: { id: missionId, storeId: storeId },
   });
+  console.log(mission);
   return mission !== null;
 };
 

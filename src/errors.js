@@ -57,3 +57,13 @@ export class DuplicateMissionError extends Error {
       this.data = data;
     }
   }
+
+  export class ImageSaveError extends Error {
+    errorCode = "I001";
+  
+    constructor(reason, data) {
+      super(reason);
+      this.reason = reason;
+      this.data = data;
+    }
+  }
