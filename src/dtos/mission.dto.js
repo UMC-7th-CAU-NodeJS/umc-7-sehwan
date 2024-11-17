@@ -20,8 +20,9 @@ export const challengeMissionDTO = (storeId, missionId, body) => {
   if (!storeId || !missionId) {
     throw new Error("storeId 또는 missionId가 누락되었습니다.");
   }
-
-  return { storeId, missionId, user_id, dday };
+  const parsedStoreId = parseInt(storeId);
+  const parsedMissionId = parseInt(missionId);
+  return { parsedStoreId, parsedMissionId, user_id, dday };
 };
 
 // Store Mission 응답 형식으로 변환

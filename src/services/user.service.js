@@ -37,13 +37,13 @@ export const userSignUp = async (data) => {
 
 export const userMission = async (userId) => {
     if (isNaN(userId)){
-        throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", userId);
+        throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", {"userId" : userId});
     }
 
     const joinUserId = await checkUserExists(userId);
 
     if (!joinUserId) {
-      throw new UserNotFoundError("사용자를 찾을 수 없습니다.", userId);
+      throw new UserNotFoundError("사용자를 찾을 수 없습니다.",  {"userId" : userId});
     }
 
     const userMissions = await getUserMissions(userId);
@@ -53,13 +53,13 @@ export const userMission = async (userId) => {
 
 export const userGetReview = async (userId) => {
     if (isNaN(userId)){
-      throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", userId);
+      throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.",  {"userId" : userId});
     }
 
     const joinUserId = await checkUserExists(userId);
 
     if (!joinUserId) {
-      throw new UserNotFoundError("사용자를 찾을 수 없습니다.", userId);
+        throw new UserNotFoundError("사용자를 찾을 수 없습니다.",  {"userId" : userId});
     }
 
     const userReviews = await getUserReview(userId);

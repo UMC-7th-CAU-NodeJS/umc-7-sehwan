@@ -22,4 +22,5 @@ export const addReview = async (data) => {
       await setImage(joinReviewId, image);
     }
   }
+  return joinReviewId;
 };

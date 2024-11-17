@@ -2,7 +2,6 @@ import { prisma } from "../db.config.js";
 
 // Mission 추가
 export const addMission = async (data) => {
-  try {
     const storeExists = await prisma.stores.findUnique({
       where: { id: data.store_id },
     });
@@ -19,9 +18,6 @@ export const addMission = async (data) => {
     });
 
     return mission.id;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`);
-  }
 };
 
 // 특정 Store ID와 Mission ID가 유효한지 확인하는 함수
