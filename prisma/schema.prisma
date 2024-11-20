@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Foods {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(50)
+
+  preferences Preference[] @relation("FoodPreferences") // 양방향 관계 설정
+}
+
+model Images {
+  id  Int     @id @default(autoincrement())
+  url String  @db.VarChar(50)
+
+  storeImages StoreImg[]
+  inquireImages Inquire[]
+  reviewImages ReviewImg[]
+}
+
+model Regions {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(50)
+
+  stores  Stores[]
+  userRegions UserRegion[]
+}
+
+model Stores {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(50)
+  regionId    Int?      @db.Int
+  address     String?   @db.VarChar(50)
+  description String?
+  type        String?   @db.VarChar(50)
+  evaluation  Int?
+
+  region Regions?       @relation(fields: [regionId], references: [id])
+  missions Missions[]
+  storeImages StoreImg[]
+  reviews Reviews[]
+  
+  @@index([regionId])
+}
+
+model Missions {
+  id          Int       @id @default(autoincrement())
+  storeId     Int?      @db.Int
+  name        String    @db.VarChar(50)
+  description String?
+  award       String?
+  awardPoint  Int?
+
+  store Stores?         @relation(fields: [storeId], references: [id])
+  reviews Reviews[]
+  acceptedMissions AcceptedMission[]
+  
+  @@index([storeId])
+}
+
+model StoreImg {
+  id         Int      @id @default(autoincrement())
+  storeId    Int?     @db.Int
+  pictureId  Int?     @db.Int
+
+  store      Stores?  @relation(fields: [storeId], references: [id])
+  image      Images?  @relation(fields: [pictureId], references: [id])
+  
+  @@index([storeId])
+  @@index([pictureId])
+}
+
+model Users {
+  id             Int       @id @default(autoincrement())
+  name           String    @db.VarChar(50)
+  gender         String?   @db.VarChar(10)
+  birth          DateTime?
+  address        String?   @db.VarChar(50)
+  email          String?   @unique
+  point          Int?      @default(0)
+  phonenum       Int?
+  status         Boolean?  @default(false) @db.TinyInt 
+
+  inquiries Inquire[]
+  preferences Preference[]
+  reviews Reviews[]
+  acceptedMissions AcceptedMission[]
+  userRegions UserRegion[]
+}
+
+model Inquire {
+  inquireId     Int       @id @default(autoincrement())
+  userId        Int?      @db.Int
+  inquireTitle  String    @db.VarChar(50)
+  inquireText   String?
+  date          DateTime? @default(now())
+  status        Int?
+  pictureId     Int?      @db.Int
+
+  user Users?           @relation(fields: [userId], references: [id])
+  image Images?         @relation(fields: [pictureId], references: [id])
+  
+  @@index([userId])
+  @@index([pictureId])
+}
+
+model Preference {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @db.Int
+  foodId     Int      @db.Int
+
+  user       Users    @relation(fields: [userId], references: [id])
+  food       Foods    @relation("FoodPreferences", fields: [foodId], references: [id])
+
+  @@index([userId])
+  @@index([foodId])
+}
+
+model Reviews {
+  id         Int      @id @default(autoincrement())
+  userId     Int?     @db.Int
+  missionId  Int?     @db.Int
+  storeId    Int?     @db.Int
+  content    String?
+  rating     Int?
+  date       DateTime?
+
+  user       Users?   @relation(fields: [userId], references: [id])
+  mission    Missions? @relation(fields: [missionId], references: [id])
+  store      Stores?   @relation(fields: [storeId], references: [id])
+  comments   Comment[]
+  reviewImages ReviewImg[]
+  acceptedMissions AcceptedMission[]
+  
+  @@index([userId])
+  @@index([missionId])
+  @@index([storeId])
+}
+
+model AcceptedMission {
+  id         Int      @id @default(autoincrement())
+  userId     Int?     @db.Int
+  missionId  Int?     @db.Int
+  reviewId   Int?     @db.Int
+  state      Boolean? @db.TinyInt 
+  dday       DateTime?
+
+  user       Users?   @relation(fields: [userId], references: [id])
+  mission    Missions? @relation(fields: [missionId], references: [id])
+  review     Reviews?  @relation(fields: [reviewId], references: [id])
+  
+  @@index([userId])
+  @@index([missionId])
+  @@index([reviewId])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  reviewId  Int?      @db.Int
+  content   String?
+
+  review    Reviews?  @relation(fields: [reviewId], references: [id])
+  
+  @@index([reviewId])
+}
+
+model ReviewImg {
+  id        Int       @id @default(autoincrement())
+  reviewId  Int?      @db.Int
+  imgId     Int?      @db.Int
+
+  review    Reviews?  @relation(fields: [reviewId], references: [id])
+  image     Images?   @relation(fields: [imgId], references: [id])
+  
+  @@index([reviewId])
+  @@index([imgId])
+}
+
+model UserRegion {
+  id        Int       @id @default(autoincrement())
+  userId    Int?      @db.Int
+  regionId  Int?      @db.Int
+  point     Int?      @default(0)
+
+  user      Users?    @relation(fields: [userId], references: [id])
+  region    Regions?  @relation(fields: [regionId], references: [id])
+  
+  @@index([userId])
+  @@index([regionId])
+}
