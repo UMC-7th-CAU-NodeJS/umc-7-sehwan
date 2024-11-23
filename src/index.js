@@ -4,12 +4,46 @@ import express from "express";
 import {handleUserSignUp, handleUserMission,handleUserReviews} from "./controllers/user.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
 import { handleCreateMission, handleChallengeMission, handleStoreMission } from "./controllers/mission.controller.js";
-
+import swaggerAutogen from "swagger-autogen";
+import swaggerUiExpress from "swagger-ui-express";
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
+
+// ...
+
+app.use(
+  "/docs",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup({}, {
+    swaggerOptions: {
+      url: "/openapi.json",
+    },
+  })
+);
+
+app.get("/openapi.json", async (req, res, next) => {
+  // #swagger.ignore = true
+  const options = {
+    openapi: "3.0.0",
+    disableLogs: true,
+    writeOutputFile: false,
+  };
+  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
+  const routes = ["./src/index.js"];
+  const doc = {
+    info: {
+      title: "UMC 7th",
+      description: "UMC 7th Node.js 테스트 프로젝트입니다.",
+    },
+    host: "localhost:3000",
+  };
+
+  const result = await swaggerAutogen(options)(outputFile, routes, doc);
+  res.json(result ? result.data : null);
+});
 /**
  * 공통 응답을 사용할 수 있는 헬퍼 함수 등록
  */
@@ -46,7 +80,6 @@ app.post("/api/stores/:storeId/missions/:missionId/challenge", handleChallengeMi
 app.get("/api/v1/store/:storeId/missions", handleStoreMission);
 app.get("/api/v1/user/:userId/missions", handleUserMission);
 app.get("/api/v1/:userId/myReviews", handleUserReviews);
-
 /**
  * 전역 오류를 처리하기 위한 미들웨어
  */
