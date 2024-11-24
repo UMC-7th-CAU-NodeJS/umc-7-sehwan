@@ -181,8 +181,8 @@ export const handleUserMission = async (req, res, next) => {
 
 export const handleUserReviews = async (req, res, next) => {
   /*
-    #swagger.summary = '사용자 미션 조회 API';
-    #swagger.description = '특정 사용자 ID로 사용자의 모든 미션 정보를 조회합니다.';
+    #swagger.summary = '사용자 리뷰 조회 API';
+    #swagger.description = '특정 사용자 ID로 사용자의 모든 리뷰 정보를 조회합니다.';
     #swagger.parameters['userId'] = {
       in: 'path',
       description: '조회할 사용자 ID',
@@ -193,7 +193,7 @@ export const handleUserReviews = async (req, res, next) => {
       }
     };
     #swagger.responses[200] = {
-      description: "사용자 미션 조회 성공",
+      description: "사용자 리뷰 조회 성공",
       content: {
         "application/json": {
           schema: {
@@ -232,7 +232,7 @@ export const handleUserReviews = async (req, res, next) => {
       }
     };
     #swagger.responses[400] = {
-      description: "사용자 미션 조회 실패",
+      description: "사용자 리뷰 조회 실패",
       content: {
         "application/json": {
           schema: {
