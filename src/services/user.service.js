@@ -8,6 +8,7 @@ import {
   checkUserExists,
   getUserMissions,
   getUserReview,
+  patchUserInfo as patchUserInfoRepository,
 } from "../repositories/user.repository.js";
 
 export const userSignUp = async (data) => {
@@ -65,4 +66,19 @@ export const userGetReview = async (userId) => {
     const userReviews = await getUserReview(userId);
     console.log(userReviews);
     return userReviews;
+};
+
+export const patchUserInfo = async (userInfo) => {
+  if (isNaN(userInfo.userId)) {
+    throw new UserNotFoundError("사용자 ID 형식이 잘못되었습니다.", { userInfo});
+  }
+
+  const joinUserId = await checkUserExists(userInfo.userId);
+  if (!joinUserId) {
+    throw new UserNotFoundError("사용자를 찾을 수 없습니다.", { userInfo });
+  }
+
+  const newUserInfo = await patchUserInfoRepository(userInfo);
+  console.log(newUserInfo);
+  return newUserInfo;
 };

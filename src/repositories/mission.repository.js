@@ -16,7 +16,6 @@ export const addMission = async (data) => {
         awardPoint: data.award_point,
       },
     });
-
     return mission.id;
 };
 

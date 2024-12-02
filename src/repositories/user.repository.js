@@ -103,3 +103,32 @@ export const getUserReview = async (userId) => {
 
     return userReview;
 }
+
+export const patchUserInfo = async (userInfo) => {
+  try {
+    // 1. 사용자 존재 여부 확인
+    const userExists = await checkUserExists(userInfo.userId);
+    if (!userExists) {
+      throw new Error(`User with ID ${userInfo.userId} does not exist.`);
+    }
+
+    // 2. 업데이트할 데이터 준비
+    const updateData = {
+      email: userInfo.email ?? undefined, // Prisma에서는 undefined를 전달하면 필드를 무시함
+      name: userInfo.name ?? undefined,
+      gender: userInfo.gender ?? undefined,
+      birth: userInfo.birth ?? undefined,
+      address: userInfo.address ?? undefined,
+      phonenum: userInfo.phonenum ?? undefined,
+    };
+
+    // 3. 사용자 정보 업데이트
+    const updatedUser = await prisma.users.update({
+      where: { id: userInfo.userId },
+      data: updateData,
+    });
+    return updatedUser;
+  } catch (error) {
+    throw new Error(`Failed to patch user info: ${error.message}`);
+  }
+};
