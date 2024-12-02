@@ -1,18 +1,50 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import {handleUserSignUp, handleUserMission,handleUserReviews} from "./controllers/user.controller.js";
+import {handleUserSignUp, handleUserMission,handleUserReviews, handleUserInfo} from "./controllers/user.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
 import { handleCreateMission, handleChallengeMission, handleStoreMission } from "./controllers/mission.controller.js";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import session from "express-session";
+import passport from "passport";
+import { googleStrategy,kakaoStrategy } from "./auth.config.js";
+import { prisma } from "./db.config.js";
+
+dotenv.config();
+
+passport.use(googleStrategy);
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
 
-// ...
+app.use(
+  session({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+    },
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, // ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(
   "/docs",
@@ -23,6 +55,46 @@ app.use(
     },
   })
 );
+
+app.get("/oauth2/login/google", passport.authenticate("google"));
+app.get(
+  "/oauth2/callback/google",
+  passport.authenticate("google", {
+    failureRedirect: "/oauth2/login/google",
+    failureMessage: true,
+  }),
+  (req, res) => res.redirect("/")
+);
+
+app.get("/oauth2/login/kakao", passport.authenticate("kakao"));
+app.get(
+  "/oauth2/callback/kakao",
+  passport.authenticate("kakao", {
+    failureRedirect: "/oauth2/login/kakao", // 로그인 실패 시 다시 로그인 페이지로 이동
+    failureMessage: true,
+  }),
+  (req, res) => {
+    // 로그인 성공 후 리다이렉션
+    res.redirect("/"); // 성공 후 홈으로 리다이렉션
+  }
+);
+
+// 기존 Google Strategy 등록
+passport.use(googleStrategy);
+
+// Kakao Strategy 등록
+passport.use(kakaoStrategy);
+
+// 세션 설정 (Google과 동일)
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+app.get("/profile", (req, res) => {
+  if (!req.user) {
+    return res.status(401).send("Unauthorized");
+  }
+  res.json(req.user); // 로그인된 사용자 정보 반환
+});
 
 app.get("/openapi.json", async (req, res, next) => {
   // #swagger.ignore = true
@@ -70,6 +142,7 @@ app.use(express.json()); // request의 본문을 json으로 해석할 수 있도
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
 
 app.get("/", (req, res) => {
+  console.log(req.user);
   res.send("Hello World!");
 });
 
@@ -80,6 +153,7 @@ app.post("/api/stores/:storeId/missions/:missionId/challenge", handleChallengeMi
 app.get("/api/v1/store/:storeId/missions", handleStoreMission);
 app.get("/api/v1/user/:userId/missions", handleUserMission);
 app.get("/api/v1/:userId/myReviews", handleUserReviews);
+app.patch("/api/v1/patchUserInfo/:userId", handleUserInfo);
 /**
  * 전역 오류를 처리하기 위한 미들웨어
  */
@@ -98,3 +172,6 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+
+app.use(passport.session());

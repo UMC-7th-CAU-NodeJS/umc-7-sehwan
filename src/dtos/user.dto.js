@@ -39,3 +39,16 @@ export const userGetReviewDTO = (userId) => {
     const parsedUserId = parseInt(userId, 10);
     return parsedUserId;
 };
+
+export const patchUserDTO = (userId, body = {}) => {
+  const birth = body.birth ? formatBirth(body.birth) : null;
+  return {
+    userId:  parseInt(userId, 10),
+    email: body.email ?? null,
+    name: body.name ?? null,
+    gender: body.gender ?? null,
+    birth: birth,
+    address: body.address ?? null,
+    phonenum: body.phonenum ?? null,
+  };
+};

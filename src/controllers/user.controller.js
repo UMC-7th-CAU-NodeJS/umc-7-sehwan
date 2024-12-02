@@ -1,6 +1,6 @@
 import  {StatusCodes} from "http-status-codes";
-import  {bodyToUser, userGetReviewDTO, userMissionDTO} from "../dtos/user.dto.js";
-import  {userSignUp, userGetReview, userMission} from "../services/user.service.js";
+import  {bodyToUser, userGetReviewDTO, userMissionDTO, patchUserDTO} from "../dtos/user.dto.js";
+import  {userSignUp, userGetReview, userMission, patchUserInfo} from "../services/user.service.js";
 
 export const handleUserSignUp = async (req, res, next) => {
      /*
@@ -271,4 +271,13 @@ export const handleUserReviews = async (req, res, next) => {
     const dto = userGetReviewDTO(userId);
     const userReview = await userGetReview(dto); //dtoo를 사용해서 service로 넘김
     res.status(StatusCodes.OK).success(userReview);
+}
+
+export const handleUserInfo = async (req, res, next) => {
+    console.log("User Patch Api called!");
+    console.log("body:", req.body);
+    const { userId } = req.params;
+    const dto = patchUserDTO(userId, req.body);
+    const userInfo = await patchUserInfo(dto); //dto를 사용해서 service로 넘김
+    res.status(StatusCodes.OK).success(userInfo);
 }
